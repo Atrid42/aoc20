@@ -168,8 +168,6 @@ public class Main {
             if (!temp.isEmpty())
                 lines.add(temp.toString());
 
-            System.out.println(lines);
-
             adventInput.close();
         } catch (IOException e) {
             e.printStackTrace();
