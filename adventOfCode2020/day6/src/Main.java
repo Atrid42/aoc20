@@ -30,17 +30,13 @@ public class Main {
     private static int part1Puzzle(List<String> input) {
         List<Integer> questionsAnswered = new ArrayList<>();
 
-        questionsAnswered = input.stream().map(it -> (int) it.replace(" ","").chars().distinct().count()).collect(Collectors.toList());
+        questionsAnswered = input.stream().map(it -> (int) it.replace(" ", "").chars().distinct().count()).collect(Collectors.toList());
 
         return questionsAnswered.stream().mapToInt(Integer::intValue).sum();
     }
 
     private static int part2Puzzle(List<String> input) {
         List<Integer> questionsAnswered = new ArrayList<>();
-/*
-        long count = input.stream().filter(
-                it -> fieldsToCheck.stream().allMatch(it::contains)
-        ).count(); */
 
         questionsAnswered = input.stream().map(it -> countCommonAnswer(it)).collect(Collectors.toList());
         return questionsAnswered.stream().mapToInt(Integer::intValue).sum();
@@ -80,8 +76,7 @@ public class Main {
                 lines.add(temp.toString());
 
             adventInput.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
