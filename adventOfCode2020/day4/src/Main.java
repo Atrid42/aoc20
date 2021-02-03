@@ -18,8 +18,14 @@ public class Main {
         List<String> input = readInputFile(inputFile);
 
         List<String> fieldsToCheck = new ArrayList<>() {{
-            add("byr:"); add("iyr:"); add("eyr:"); add("hgt:");
-            add("hcl:"); add("ecl:"); add("pid:"); add("cid:");
+            add("byr:");
+            add("iyr:");
+            add("eyr:");
+            add("hgt:");
+            add("hcl:");
+            add("ecl:");
+            add("pid:");
+            add("cid:");
         }};
 
         System.out.println("The solution for the first part is:");
@@ -63,15 +69,20 @@ public class Main {
         List<String> splitFields = Arrays.asList(fields.split(" "));
 
         List<String> eyeColor = new ArrayList<>() {{
-            add("amb"); add("blu"); add("brn"); add("gry");
-            add("grn"); add("hzl"); add("oth");
+            add("amb");
+            add("blu");
+            add("brn");
+            add("gry");
+            add("grn");
+            add("hzl");
+            add("oth");
         }};
 
         for (int i = 0; i < splitFields.size(); i++) {
             String[] keyValue = splitFields.get(i).split(":");
-            switch (keyValue[0]){
+            switch (keyValue[0]) {
                 case "byr":
-                    try{
+                    try {
                         Integer value = Integer.parseInt(keyValue[1]);
                         if (value < 1920 || value > 2002)
                             return false;
@@ -117,8 +128,7 @@ public class Main {
                         } catch (NumberFormatException e) {
                             return false;
                         }
-                    }
-                    else
+                    } else
                         return false;
                 case "hcl":
                     if (keyValue[1].length() != 7 || !keyValue[1].startsWith("#") || !keyValue[1].substring(1).matches("^[a-z0-9]*$"))
@@ -152,13 +162,16 @@ public class Main {
                 if (line.isBlank()) {
                     lines.add(temp.toString());
                     temp.setLength(0);
-                }
-                else
+                } else
                     temp.append(line).append(" ");
 
+            if (!temp.isEmpty())
+                lines.add(temp.toString());
+
+            System.out.println(lines);
+
             adventInput.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
