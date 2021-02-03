@@ -41,13 +41,8 @@ public class Main {
     private static int part2Puzzle(List<String> input, List<String> fieldsToCheck) {
         fieldsToCheck.remove("cid:");
 
-        long count = input.stream().filter(it -> {
-            if (fieldsToCheck.stream().allMatch(it::contains)) {
-                List<String> fields = Arrays.asList(it.split(" "));
-                return checkFields(fields, fieldsToCheck);
-            }
-            return false;
-        }).count();
+        long count = input.stream().filter(it -> fieldsToCheck.stream().allMatch(it::contains) && checkFields(it))
+                .count();
 
         return (int) count;
     }
@@ -64,21 +59,85 @@ public class Main {
     pid (Passport ID) - a nine-digit number, including leading zeroes.
     cid (Country ID) - ignored, missing or not.
     */
-    private static boolean checkFields(List<String> fields, List<String> fieldName) {
-        int count = 0;
-        Collections.sort(fields); //order : byr - ecl - eyr - hcl - hgt - iyr - pid
+    private static boolean checkFields(String fields) {
+        List<String> splitFields = Arrays.asList(fields.split(" "));
 
-        if (fields.get(1).startsWith("cid:")) {
-            String temp = fields.get(8);
-            fields.get(8) = fields.get(1)
+        List<String> eyeColor = new ArrayList<>() {{
+            add("amb"); add("blu"); add("brn"); add("gry");
+            add("grn"); add("hzl"); add("oth");
+        }};
+
+        for (int i = 0; i < splitFields.size(); i++) {
+            String[] keyValue = splitFields.get(i).split(":");
+            switch (keyValue[0]){
+                case "byr":
+                    try{
+                        Integer value = Integer.parseInt(keyValue[1]);
+                        if (value < 1920 || value > 2002)
+                            return false;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                    break;
+                case "iyr":
+                    try {
+                        Integer value = Integer.parseInt(keyValue[1]);
+                        if (value < 2010 || value > 2020)
+                            return false;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                    break;
+                case "eyr":
+                    try {
+                        Integer value = Integer.parseInt(keyValue[1]);
+                        if (value < 2020 || value > 2030)
+                            return false;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                    break;
+                case "hgt":
+                    if (keyValue[1].endsWith("cm")) {
+                        try {
+                            Integer value = Integer.parseInt(keyValue[1].replace("cm", ""));
+                            if (value < 150 || value > 193)
+                                return false;
+                            break;
+                        } catch (NumberFormatException e) {
+                            return false;
+                        }
+                    }
+                    if (keyValue[1].endsWith("in")) {
+                        try {
+                            Integer value = Integer.parseInt(keyValue[1].replace("in", ""));
+                            if (value < 59 || value > 76)
+                                return false;
+                            break;
+                        } catch (NumberFormatException e) {
+                            return false;
+                        }
+                    }
+                    else
+                        return false;
+                case "hcl":
+                    if (keyValue[1].length() != 7 || !keyValue[1].startsWith("#") || !keyValue[1].substring(1).matches("^[a-z0-9]*$"))
+                        return false;
+                    break;
+                case "ecl":
+                    if (!eyeColor.contains(keyValue[1]))
+                        return false;
+                    break;
+                case "pid":
+                    if (keyValue[1].length() != 9 || !keyValue[1].matches("^[0-9]*$"))
+                        return false;
+                    break;
+                default:
+                    break;
+            }
         }
 
-        System.out.println(fields);
-
-        fields = fields.stream().map(it -> it.substring(4)).collect(Collectors.toList());
-
-        System.out.println(fields);
-        return false;
+        return true;
     }
 
     static List<String> readInputFile(String inputFileName) {
